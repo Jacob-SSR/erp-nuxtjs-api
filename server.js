@@ -3,10 +3,11 @@ const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
+const { handleErrors } = require("./middlewares/error");
+const { notfound } = require("./utils/notFound");
 
-const handleErrors = require("./middlewares/errorMiddleware");
 const userRouter = require("./routes/userRoute");
-const notFoundMiddleware = require("./middlewares/notFoundMiddleware");
+const productRouter = require("./routes/productRoute");
 
 const app = express();
 
@@ -17,9 +18,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
 app.use("/api", userRouter);
+app.use("/api", productRouter);
 
-app.use(notFoundMiddleware);
 app.use(handleErrors);
+app.use(notfound);
 
 const PORT = 3001 || process.env.PORT;
 app.listen(PORT, "0.0.0.0", () =>
