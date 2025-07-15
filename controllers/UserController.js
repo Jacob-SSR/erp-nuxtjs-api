@@ -33,3 +33,61 @@ exports.signIn = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.info = async (req, res, next) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    const payload = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const user = await prisma.user.findUnique({
+      select: {
+        name: true,
+        username: true,
+        level: true,
+      },
+      where: {
+        id: payload.id,
+      },
+    });
+
+    res.json({ result: user });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.update = async (req, res, next) => {
+  try {
+    const { name, password, username, level } = req.body;
+    const token = req.headers.authorization.split(" ")[1];
+    const payload = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    let oldPassword = "";
+
+    if (password) {
+      oldPassword;
+    } else {
+      const oldUser = await prisma.user.findUnique({
+        where: {
+          id: payload.id,
+        },
+      });
+
+      oldPassword = oldUser.password;
+    }
+
+    await prisma.user.update({
+      where: {
+        id: payload.id,
+      },
+      data: {
+        name,
+        username,
+        level,
+        password: oldPassword,
+      },
+    });
+
+    res.status(200).json({ message: "success" });
+  } catch (error) {
+    next(error);
+  }
+};
