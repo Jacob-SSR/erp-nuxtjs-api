@@ -29,22 +29,27 @@ model ProductType {
 }
 
 model Material {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  unit      String
-  price     Int
-  remark    String?
-  status    String    @default("active")
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @updatedAt
+  id            String          @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  unit          String
+  price         Int
+  remark        String?
+  balance       Int             @default(0)
+  status        String          @default("active")
+  createdAt     DateTime?       @default(now())
+  updatedAt     DateTime?       @updatedAt
+  StockMaterial StockMaterial[]
 }
 
 model StockMaterial {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  materilId String
-  quantity  Int
-  price     Int
-  remark    String?
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @updatedAt
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  materialId String    @db.ObjectId
+  quantity   Int
+  price      Int
+  balance    Int       @default(0)
+  remark     String?
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
+
+  Material Material @relation(fields: [materialId], references: [id])
 }

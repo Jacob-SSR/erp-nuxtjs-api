@@ -8,6 +8,8 @@ const { notfound } = require("./utils/notFound");
 
 const userRouter = require("./routes/userRoute");
 const productRouter = require("./routes/productRoute");
+const materialRouter = require("./routes/materialRoute");
+const stockMaterialRouter = require("./routes/stockMaterialRoute");
 
 const app = express();
 
@@ -19,6 +21,8 @@ app.use(morgan("dev"));
 
 app.use("/api", userRouter);
 app.use("/api", productRouter);
+app.use("/api", materialRouter);
+app.use("/api", stockMaterialRouter);
 
 app.use(handleErrors);
 app.use(notfound);
